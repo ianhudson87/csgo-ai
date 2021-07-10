@@ -1,0 +1,31 @@
+wipe colors
+downscale
+line threshold? cv2.Canny
+fastAI
+limit framerate
+remove decals
+crosshair no crosshair?
+downscale only the edges of the screen
+label the images with correct answer
+record keystrokes and mouse input
+erase bad info
+viewmodel
+cl_draw_deathnotices_only
+afk
+sensitivity
+open console to very topleft
+gamestate api
+
+tesseract https://github.com/UB-Mannheim/tesseract/wiki
+
+unbind f10; bind f10 "con_logfile pos_output.log; getpos; con_logfile ''; r_cleardecals"
+
+m_rawinput 0
+
+cl_righthand 0  so ammo is easier to read
+health/ammo style: default
+
+fps_max 30
+
+hud_scaling 0.950000 
+cl_hud_radar_scale 0.8
