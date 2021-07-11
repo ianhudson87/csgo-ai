@@ -13,13 +13,14 @@ class AmmoManager:
         self.ammo_img_ref = {}
         self.default_ammo_amount = 30
 
-        ammo_img_ref_path = "./ammo_images"
+        ammo_img_ref_path = "./ammo_images_hud_scaling_0_5"
         img_glob = glob.glob(os.path.join(ammo_img_ref_path, "*.png"))
         for img_path in img_glob:
-            ammo_value = int(re.search(r'\d+', img_path).group())
+            ammo_value = int(re.search(r'\d+', os.path.split(img_path)[-1]).group())
             # print(ammo_value)
             img = np.array(Image.open(img_path))
             self.ammo_img_ref[ammo_value] = img
+        # print(self.ammo_img_ref)
 
     def set_current_ammo(self, ammo_img):
         self.previous_ammo_amt = self.current_ammo_amt
@@ -44,5 +45,5 @@ class AmmoManager:
 
 # a = AmmoManager()
 # print(a.ammo_img_ref[12].dtype)
-# cv2.imshow("test", a.ammo_img_ref[12])
+# cv2.imshow("test", a.ammo_img_ref[30])
 # cv2.waitKey(0)
