@@ -34,3 +34,18 @@ hud background alpha 1
 anonymous names
 
 launch options
+
+unbind f8; bind f8 "con_logfile pos_output.log; getpos; con_logfile ''; r_cleardecals; spectate"
+m_rawinput 0
+
+cl_righthand 0
+fps_max 30
+hud_scaling 0.5
+cl_hud_radar_scale 0.8
+cl_hud_background_alpha 1
+
+mat_monitor
+
+viewmodel_fov 0
+viewmodel offset
+hud color white

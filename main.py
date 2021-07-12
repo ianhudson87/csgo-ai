@@ -3,7 +3,7 @@ import cv2
 from mss import mss
 from PIL import Image
 import time
-import pytesseract
+# import pytesseract
 import os
 from keyboard_input import TapKey
 from mouse_input import move_mouse
@@ -12,7 +12,7 @@ from ammo_manager import AmmoManager
 import keyboard
 import pandas as pd
 
-pytesseract.pytesseract.tesseract_cmd ='C:/Program Files/Tesseract-OCR/tesseract.exe' 
+# pytesseract.pytesseract.tesseract_cmd ='C:/Program Files/Tesseract-OCR/tesseract.exe' 
 csgo_log_path = 'C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo' # looks for pos_output.log
 log_key_hex = 0x42 # DirectInput Key Code for key bind that logs position. Need: bind [key] "con_logfile pos_output.log; getpos; con_logfile ''" in csgo
 pos_file = open(os.path.join(csgo_log_path, "pos_output.log"), "r+")
@@ -81,9 +81,10 @@ while True:
     if total_saved_frames % 1000 == 0 and len(images_cache) != 0:
         save_data()
         next_frame = time.time()
-        TapKey(0x11) # press w key to not get kick by afk
         if time.time()-start_time > 36000:
             break
+    if total_saved_frames % 80 == 0 and len(images_cache) != 0:
+        TapKey(0x11) # press w key to not get kick by afk
     if keyboard.is_pressed('q'):
         print("q pressed! terminating")
         save_data()
