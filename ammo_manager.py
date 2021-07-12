@@ -35,6 +35,8 @@ class AmmoManager:
             if np.array_equal(self.ammo_img_ref[i], ammo_img):
                 return i
         else:
+            if self.previous_ammo_amt is not None:
+                return self.previous_ammo_amt
             return self.default_ammo_amount
 
     def isShooting(self):
