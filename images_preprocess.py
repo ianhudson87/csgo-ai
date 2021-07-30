@@ -3,14 +3,17 @@ import h5py
 import cv2
 import os
 import glob
+import sys
+import numpy as np
 
-images_path = "./logs/" + "validation"
+images_path = "./logs/" + sys.argv[1]
+print("applying preprocessing to:", images_path)
 
 # rename images so that it actually goes 1, 2, 3, ... when loading
 rename = True
 if rename:
   images_glob = glob.glob(images_path+"/images" + "/*.jpeg")
-  print(images_glob)
+  # print(images_glob)
   i=0
   for image_path in images_glob:
     i+=1
@@ -40,7 +43,7 @@ if preprocess:
 
   # resize all images and load into a single dataset
   with h5py.File(h5file,'w') as  h5f:
-      img_ds = h5f.create_dataset('images',shape=(nfiles, IMG_HEIGHT, IMG_WIDTH, 3), dtype=int)
+      img_ds = h5f.create_dataset('images',shape=(nfiles, IMG_HEIGHT, IMG_WIDTH, 3), dtype=np.uint8)
       for cnt, ifile in enumerate(images_glob) :
           if cnt%100 == 99:
               print(cnt)

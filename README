@@ -49,3 +49,13 @@ mat_monitor
 viewmodel_fov 0
 viewmodel offset
 hud color white
+
+things to try:
+    don't change weights of the pretrained
+    ordinal multiclass
+    cost sensitive
+    add layers after pretrained and before lstm
+
+TODO:
+    add labels to h5 file, do preprocessing locally
+    
