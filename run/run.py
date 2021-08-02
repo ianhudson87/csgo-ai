@@ -23,12 +23,13 @@ next_frame = last_frame + sec_per_frame
 model_path = "./checkpoints/net20.pth"
 
 model = SomethingModel(hidden_layer_size=256)
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-8)
 checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
 print("here"*100)
 model.load_state_dict(checkpoint['model'])
-optimizer.load_state_dict(checkpoint['optimizer'])
-# model.eval()
+model.eval()
+
+if torch.cuda.is_available():
+    model = model.cuda()
 
 print("here"*100)
 
@@ -87,6 +88,9 @@ while True:
             # print("here", center_img)
 
             # cv2.imshow("test", input)
+
+            if torch.cuda.is_available():
+                input = input.cuda()
 
             hidden, y_pred = model((input, hidden)) # state used for LSTM hidden state
             # hidden[0].detach_()
