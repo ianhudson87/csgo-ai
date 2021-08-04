@@ -9,6 +9,8 @@ import sys
 sys.path.append("../")
 from mouse_input import move_mouse
 
+# USAGE: python run.py [model_name]
+
 game_frame_x = 448
 game_frame_y = 167
 # meta_frame = {'left': game_frame_x+17, 'top': game_frame_y+58, 'width': 500, 'height': 15}
@@ -20,7 +22,7 @@ sec_per_frame = 1./framerate
 last_frame = time.time()
 next_frame = last_frame + sec_per_frame
 
-model_path = "./checkpoints/net20.pth"
+model_path = "./checkpoints/" + sys.argv[1]
 
 model = SomethingModel(hidden_layer_size=256)
 checkpoint = torch.load(model_path, map_location=torch.device('cpu'))
@@ -70,7 +72,7 @@ while True:
             # screenshot center of screen
             # center_img = np.array(sct.grab(center_frame)) ############## do i need this
             center_img = sct.grab(center_frame)
-            im = Image.frombytes("RGB", center_img.size, center_img.bgra, "raw", "BGRX")
+            im = Image.frombytes("RGB", center_img.size, center_img.bgra, "raw", "RGBX")
             # center_img = center_img[:, :, 0:3]
             # print(np.shape(center_img[:, :, 0:3]))
             # cv2.imshow("test", center_img)
@@ -80,6 +82,7 @@ while True:
             # b, g, r = im.split() # flip red and blue
             # im = Image.merge("RGB", (r, g, b))
             input = np.array(im.resize((180, 80), Image.ANTIALIAS))
+            # cv2.imshow("test", input)
             input = np.expand_dims(input, axis=0)
             input = np.swapaxes(input, 1, 3) / 256
             input = torch.tensor(input).type(torch.float32)
@@ -106,7 +109,8 @@ while True:
 
             print(pred['mouse_x'])
             print(pred['mouse_y'])
-            move_mouse(mouse_table[pred["mouse_x"]], mouse_table[pred["mouse_y"]])
+            # move_mouse(mouse_table[pred["mouse_x"]], mouse_table[pred["mouse_y"]])
+            move_mouse(mouse_table[pred["mouse_x"]], 0)
 
         
         if cv2.waitKey(33) & 0xFF in (
