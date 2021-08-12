@@ -6,7 +6,7 @@ import torch
 
 def get_options():
     opt = {
-    "batch_size": 1,
+    "batch_size": 32, # doesnt do anything here
     "width": 80,
     "length":180,
     "num_features": 21 + 21 + 6, # using one hot encoding for output of model for mouse_x and mouse_y
@@ -27,7 +27,6 @@ class SomethingModel(nn.Module):
 
         global opt
         hidden_size = hidden_layer_size
-        num_filter = 3
 
         # get the first 2 layers of the pretrained efficient net
         head = nn.ModuleList(list(eff_net.children())[0:2])

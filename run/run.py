@@ -6,6 +6,7 @@ from model.SomethingModel import SomethingModel
 import cv2
 import torch
 import sys
+sys.path.append("./")
 sys.path.append("../")
 from mouse_input import move_mouse
 
@@ -21,6 +22,8 @@ framerate = 16
 sec_per_frame = 1./framerate
 last_frame = time.time()
 next_frame = last_frame + sec_per_frame
+batch_size = 32
+images_cache = torch.zeros((batch_size, 3, 180, 80))
 
 model_path = "./checkpoints/" + sys.argv[1]
 
@@ -61,6 +64,8 @@ mouse_table = {
     20: 300,
 }
 
+cached_image_index = 0
+
 while True:
     if time.time() >= next_frame:
         with mss() as sct:
@@ -81,16 +86,36 @@ while True:
             # im = im.convert('RGB') # remove alpha channel
             # b, g, r = im.split() # flip red and blue
             # im = Image.merge("RGB", (r, g, b))
-            input = np.array(im.resize((180, 80), Image.ANTIALIAS))
+            im = np.array(im.resize((180, 80), Image.ANTIALIAS))
+            print(np.shape(im))
             # cv2.imshow("test", input)
-            input = np.expand_dims(input, axis=0)
-            input = np.swapaxes(input, 1, 3) / 256
-            input = torch.tensor(input).type(torch.float32)
+            # im = np.expand_dims(input, axis=0)
+            im = np.swapaxes(im, 0, 2) / 256
+            im = torch.tensor(im).type(torch.float32)
 
             # print("SHAPE", input.shape)
             # print("here", center_img)
 
+            print(np.shape(images_cache))
+            if cached_image_index < batch_size - 1:
+                # cache is not full, fill'r up
+                images_cache[cached_image_index] = im
+                cached_image_index += 1
+                continue
+            elif cached_image_index == batch_size - 1:
+                images_cache[cached_image_index] = im
+                # cache just filled up
+                cached_image_index += 1
+            else:
+                # cache is already full
+                print("hi")
+                # images_cache[0:batch_size-1] = images_cache[1:batch_size].clone() # shift everything over
+                # images_cache[batch_size-1] = im
+
             # cv2.imshow("test", input)
+
+
+            input = images_cache.clone()
 
             if torch.cuda.is_available():
                 input = input.cuda()
@@ -99,12 +124,12 @@ while True:
             # hidden[0].detach_()
             # hidden[1].detach_()
 
-            # print(y_pred.shape)
+            print(y_pred.shape)
 
             pred = {
-                "inputs": torch.argmax(y_pred[:, 0:6]).item(),
-                "mouse_x": torch.argmax(y_pred[:, 6:27]).item(),
-                "mouse_y": torch.argmax(y_pred[:, 27:48]).item(),
+                "inputs": torch.argmax(y_pred[0, 0:6]).item(),
+                "mouse_x": torch.argmax(y_pred[0, 6:27]).item(),
+                "mouse_y": torch.argmax(y_pred[0, 27:48]).item(),
             }
 
             print(pred['mouse_x'])
